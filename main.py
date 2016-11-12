@@ -68,3 +68,4 @@ error = math.sqrt(error) # IDEAL FROBENIUS ERROR
 Implemntation of SVD
 """
 prod_for_U = np.dot(ratings,ratings.T)  # First step for finding the matrix U is to find A*A.Transpose
+
