@@ -83,14 +83,14 @@ Output : The tridagonal form of the matrix
 
 house_ratings = np.dot(ratings,ratings.T) 
 dimension = house_ratings.shape[0]
-v = [0] * dimension
-u = [0] * dimension
-z = [0] * dimension
+v = [0.0] * dimension
+u = [0.0] * dimension
+z = [0.0] * dimension
 for k in range(0,dimension-2):
 	q = 0.0
 	alpha = 0.0
 	PROD = 0.0
-
+	RSQ = 0.0
 	for j in range(k,dimension):
 		q = q + house_ratings[j][k]**2
 
@@ -109,10 +109,11 @@ for k in range(0,dimension-2):
 	for j in range(k,dimension):
 		for s in range(k+1,dimension):
 			u[j] = u[j] + house_ratings[j][s]*v[s]
-	
+		u[j] = (1/RSQ)*u[j]
+
 	for s in range(k+1,dimension):
 		PROD = PROD + v[s]*u[s]
-
+	print PROD
 	for j in range(k,dimension):
 		z[j] = u[j] - (PROD/(2*RSQ))*v[j]
 
