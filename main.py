@@ -17,7 +17,7 @@ import numpy as np
 import math
 from numpy import linalg as LA
 
-input_file = open("ratings.txt","r")
+input_file = open("test.txt","r")
 rating_raw = input_file.readlines()
 rating_list = []
 
@@ -76,6 +76,7 @@ Implemntation of SVD
 
 
 '''
+TRIDIAGONALIZATION
 GIVEN A SQUARE MATRIX, CALCULATION OF IT's HOUSEHOLDER TRIDIAGONAL TRANSFORMATION
 Input : ratings X ratings.transpose (the required square matrix)
 Output : The tridagonal form of the matrix
@@ -132,30 +133,39 @@ for k in range(0,dimension-2):
 	house_ratings[k+1][k] = house_ratings[k+1][k] - v[k+1]*z[k]
 	house_ratings[k][k+1] = house_ratings[k][k+1]
 
-
-print house_ratings
-
 '''
+QR DECOMPOSITION
 Eigen Values of a given matrix A(house_ratings) which is in its tridiagonal form
 INPUT : dimension, Tolerance (TOL), maximum number of iterations
 OUTPUT : Eigen values of A (house_ratings)
 '''
+
+
 copy_dimension = dimension
-k = 1
+k = 0
 SHIFT = 0
+Lambda = []
 
 while k<=M:
 	if abs(house_ratings[dimension-1][dimension-2])<=TOL:
-		Lambda = house_ratings[dimension-1][dimension-1] + SHIFT
-	else:
+		_lambda = house_ratings[dimension-1][dimension-1] + SHIFT
+		Lambda.append(_lambda)
 		dimension = dimension - 1
 
 	if abs(house_ratings[1][0])<=TOL:
-		Lambda = house_ratings[0][0] + SHIFT
-		print Lambda
+		_lambda = house_ratings[0][0] + SHIFT
+		Lambda.append(_lambda)
 		dimension = dimension - 1
 		house_ratings[0][0] = house_ratings[1][1]
-		for j in range(2,dimension):
+		for j in range(1,dimension):
 			house_ratings[j][j] = house_ratings[j+1][j+1]
-			
+			house_ratings[j-1][j-2] = house_ratings[j][j-1]
+	
+	if dimension == 0 : break
 
+	if dimension == 1 :
+		_lambda = house_ratings[0][0] + SHIFT
+		Lambda.append(_lambda)
+		break
+
+	for j in range(2,dimension-1):
