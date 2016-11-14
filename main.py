@@ -45,9 +45,12 @@ ratings = np.zeros((max_user, max_item))
 
 for rating in rating_list:
 	ratings[rating[0]-1][rating[1]-1] = rating[2]
+
+
 """
+'''
 Caluclating the Frobenius Error obtained by using the inbuilt SVD package of Python
-"""
+'''
 U,sigma,V = LA.svd(ratings,full_matrices=False)
 final_sigma = np.zeros((len(sigma),len(sigma)))
 for i in range(0,len(sigma)):
@@ -65,7 +68,67 @@ for i in range(0,len(ratings)):
 error = math.sqrt(error) # IDEAL FROBENIUS ERROR 
 
 """
+
+
+"""
 Implemntation of SVD
 """
-prod_for_U = np.dot(ratings,ratings.T)  # First step for finding the matrix U is to find A*A.Transpose
 
+
+'''
+GIVEN A SQUARE MATRIX, CALCULATION OF IT's HOUSEHOLDER TRIDIAGONAL TRANSFORMATION
+Input : ratings X ratings.transpose (the required square matrix)
+Output : The tridagonal form of the matrix
+'''
+
+house_ratings = np.dot(ratings,ratings.T) 
+dimension = house_ratings.shape[0]
+v = [0] * dimension
+u = [0] * dimension
+z = [0] * dimension
+for k in range(0,dimension-2):
+	q = 0.0
+	alpha = 0.0
+	PROD = 0.0
+
+	for j in range(k,dimension):
+		q = q + house_ratings[j][k]**2
+
+	if house_ratings[k+1][k] == 0 :
+		alpha = -(q**0.5)
+	else:
+		alpha = -(((q**0.5)*house_ratings[k+1][k])/(abs(house_ratings[k+1][k])))
+
+	RSQ = (alpha**2) - alpha*(house_ratings[k+1][k])
+	
+	v[k] = 0
+	v[k+1] = house_ratings[k+1][k] - alpha
+	for j in range(k+2,dimension):
+		v[j] = house_ratings[j][k]
+
+	for j in range(k,dimension):
+		for s in range(k+1,dimension):
+			u[j] = u[j] + house_ratings[j][s]*v[s]
+	
+	for s in range(k+1,dimension):
+		PROD = PROD + v[s]*u[s]
+
+	for j in range(k,dimension):
+		z[j] = u[j] - (PROD/(2*RSQ))*v[j]
+
+	for l in range(k+1,dimension-1):
+		for j in range(l+1,dimension):
+			house_ratings[j][l] = house_ratings[j][l] - v[l]*z[j] - v[j]*z[l]
+			house_ratings[l][j] = house_ratings[j][l]
+		house_ratings[l][l] = house_ratings[l][l] - 2*v[l]*z[l]
+
+	house_ratings[dimension-1][dimension-1] = house_ratings[dimension-1][dimension-1] - 2*v[dimension-1]*z[dimension-1]
+
+	for j in range(k+2,dimension):
+		house_ratings[k][j] = 0
+		house_ratings[j][k] = 0
+
+	house_ratings[k+1][k] = house_ratings[k+1][k] - v[k+1]*z[k]
+	house_ratings[k][k+1] = house_ratings[k][k+1]
+
+print house_ratings
