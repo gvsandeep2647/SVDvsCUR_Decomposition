@@ -83,9 +83,9 @@ Output : The tridagonal form of the matrix
 
 house_ratings = np.dot(ratings,ratings.T) 
 dimension = house_ratings.shape[0]
-v = [0] * dimension
-u = [0] * dimension
-z = [0] * dimension
+v = [0.0] * dimension
+u = [0.0] * dimension
+z = [0.0] * dimension
 for k in range(0,dimension-2):
 	q = 0.0
 	alpha = 0.0
@@ -131,4 +131,30 @@ for k in range(0,dimension-2):
 	house_ratings[k+1][k] = house_ratings[k+1][k] - v[k+1]*z[k]
 	house_ratings[k][k+1] = house_ratings[k][k+1]
 
+
 print house_ratings
+
+'''
+Eigen Values of a given matrix A(house_ratings) which is in its tridiagonal form
+INPUT : dimension, Tolerance (TOL), maximum number of iterations
+OUTPUT : Eigen values of A (house_ratings)
+'''
+copy_dimension = dimension
+k = 1
+SHIFT = 0
+
+while k<=M:
+	if abs(house_ratings[dimension-1][dimension-2])<=TOL:
+		Lambda = house_ratings[dimension-1][dimension-1] + SHIFT
+	else:
+		dimension = dimension - 1
+
+	if abs(house_ratings[1][0])<=TOL:
+		Lambda = house_ratings[0][0] + SHIFT
+		print Lambda
+		dimension = dimension - 1
+		house_ratings[0][0] = house_ratings[1][1]
+		for j in range(2,dimension):
+			house_ratings[j][j] = house_ratings[j+1][j+1]
+			
+
