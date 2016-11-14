@@ -140,32 +140,71 @@ INPUT : dimension, Tolerance (TOL), maximum number of iterations
 OUTPUT : Eigen values of A (house_ratings)
 '''
 
-
 copy_dimension = dimension
-k = 0
-SHIFT = 0
+diagonal = []
+subdiagonal = []
+for i in range(0,dimension):
+	diagonal.append(house_ratings[i][i])
+for i range(1,dimension):
+	subdiagonal.append(house_ratings[i][i-1])
 Lambda = []
 
-while k<=M:
-	if abs(house_ratings[dimension-1][dimension-2])<=TOL:
-		_lambda = house_ratings[dimension-1][dimension-1] + SHIFT
-		Lambda.append(_lambda)
-		dimension = dimension - 1
+def QR_Decomposition(diagonal,subdiagonal):
+	global Lambda
+	k = 0
+	SHIFT = 0
+	while k<=M:
+		if abs(subdiagonal[len(subdiagonal)-1])<=TOL:
+			_lambda = diagonal[len(diagonal)-1] + SHIFT
+			Lambda.append(_lambda)
+			dimension = dimension - 1
 
-	if abs(house_ratings[1][0])<=TOL:
-		_lambda = house_ratings[0][0] + SHIFT
-		Lambda.append(_lambda)
-		dimension = dimension - 1
-		house_ratings[0][0] = house_ratings[1][1]
-		for j in range(1,dimension):
-			house_ratings[j][j] = house_ratings[j+1][j+1]
-			house_ratings[j-1][j-2] = house_ratings[j][j-1]
-	
-	if dimension == 0 : break
+		if abs(subdiagonal[0])<=TOL:
+			_lambda = diagonal[0] + SHIFT
+			Lambda.append(_lambda)
+			dimension = dimension - 1
+			diagonal[0] = diagonal[1]
+			for j in range(1,dimension):
+				diagonal[j] = diagonal[j+1]
+				subdiagonal[j-2] = subdiagonal[j-1]
+		
+		if dimension == 0 : break
 
-	if dimension == 1 :
-		_lambda = house_ratings[0][0] + SHIFT
-		Lambda.append(_lambda)
-		break
+		if dimension == 1 :
+			_lambda = house_ratings[0][0] + SHIFT
+			Lambda.append(_lambda)
+			break
 
-	for j in range(2,dimension-1):
+		for j in range(2,dimension-1):
+			if subdiagonal[j-2] <= TOL :
+				QR_Decomposition(diagonal[0:j],subdiagonal[0:j-3])
+				QR_Decomposition(diagonal[j:dimension],subdiagonal[j-1:dimension-2])
+				break
+
+		B = -(diagonal[dimension-2]+diagonal[dimension-1])
+		C = diagonal[dimension-1]*diagonal[dimension-2] - (subdiagonal[len(subdiagonal)-1])**2
+		D = (B**2 - 4*C) ** 0.5
+
+		mew1 = 0.0
+		mew2 = 0.0 
+
+		if B > 0 :
+			mew1 = (-2*C)/(B+D)
+			mew2 = -(B+D)/2
+		else:
+			mew1 = (D-B)/2
+			mew2 = 2*C/(D-B)
+
+		if dimension == 2 :
+			_lambda1 = mew1 + SHIFT
+			_lambda2 = mew2 + SHIFT
+			Lambda.append(_lambda1)
+			Lambda.append(_lambda2)
+			break
+		sigma = 0
+		minimum = min(abs(mew1,diagonal[dimension-1]),abs(mew2,diagonal[dimension-1]))
+		if minimum < 0:
+			sigma = diagonal[dimension-1] - minimum
+		else:
+			sigma = diagonal[dimension-1] + minimum
+			
