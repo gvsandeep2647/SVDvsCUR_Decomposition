@@ -143,12 +143,12 @@ OUTPUT : Eigen values of A (house_ratings)
 copy_dimension = dimension
 diagonal = []
 subdiagonal = []
-subdiagonal.append(0)
 for i in range(0,dimension):
 	diagonal.append(house_ratings[i][i])
 for i in range(1,dimension):
 	subdiagonal.append(house_ratings[i][i-1])
 Lambda = []
+print house_ratings.shape
 
 def QR_Decomposition(diagonal,subdiagonal,dimension):
 	global Lambda
@@ -163,7 +163,9 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 	z = [0.0]*dimension
 	M = 20
 	TOL = 0.0001
-
+	temp = 0
+	subdiagonal = [temp] + subdiagonal
+	print subdiagonal
 	#1
 	k = 1
 	SHIFT = 0
@@ -172,6 +174,7 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 	while k<=M:
 
 		#3
+		print dimension-1
 		if abs(subdiagonal[dimension-1])<=TOL:
 			_lambda = diagonal[dimension-1] + SHIFT
 			Lambda.append(_lambda)
@@ -196,7 +199,8 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 
 
 		for j in range(2,dimension-1):
-			if subdiagonal[j-1] <= TOL :
+			
+			if abs(subdiagonal[j-1]) <= TOL :
 				QR_Decomposition(diagonal[0:j-1],subdiagonal[1:j-1],dimension)
 				QR_Decomposition(diagonal[j-1:dimension],subdiagonal[j-1:dimension],dimension)
 				break
@@ -223,7 +227,7 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 			break
 		
 		sigma = 0
-		minimum = min(abs(mew1,diagonal[dimension-1]),abs(mew2,diagonal[dimension-1]))
+		minimum = min(abs(mew1-diagonal[dimension-1]),abs(mew2-diagonal[dimension-1]))
 		if minimum < 0:
 			sigma = diagonal[dimension-1] - minimum
 		else:
@@ -265,4 +269,5 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 
 
 QR_Decomposition(diagonal,subdiagonal,dimension)
+print len(Lambda)
 print Lambda
