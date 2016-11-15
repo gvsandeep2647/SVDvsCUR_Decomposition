@@ -166,8 +166,8 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 	k = 0
 	SHIFT = 0
 	while k<=M:
-		if abs(subdiagonal[len(subdiagonal)-1])<=TOL:
-			_lambda = diagonal[len(diagonal)-1] + SHIFT
+		if abs(subdiagonal[dimension-2])<=TOL:
+			_lambda = diagonal[dimension-1] + SHIFT
 			Lambda.append(_lambda)
 			dimension = dimension - 1
 
@@ -190,11 +190,11 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 		for j in range(2,dimension-1):
 			if subdiagonal[j-2] <= TOL :
 				QR_Decomposition(diagonal[0:j-1],subdiagonal[0:j-2],dimension)
-				QR_Decomposition(diagonal[j-1:dimension],subdiagonal[j-1:len(subdiagonal)-1],dimension)
+				QR_Decomposition(diagonal[j-1:dimension],subdiagonal[j-1:dimension-1],dimension)
 				break
 
 		B = -(diagonal[dimension-2]+diagonal[dimension-1])
-		C = diagonal[dimension-1]*diagonal[dimension-2] - (subdiagonal[len(subdiagonal)-1])**2
+		C = diagonal[dimension-1]*diagonal[dimension-2] - (subdiagonal[dimension-2])**2
 		D = (B**2 - 4*C) ** 0.5
 
 		mew1 = 0.0
@@ -230,7 +230,7 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 		x[0] = d[0]
 		y[0] = subdiagonal[0]
 
-		for j in range(2,dimension):
+		for j in range(1,dimension):
 			z[j-1] = ((x[j-1])**2+(subdiagonal[j-2])**2)**0.5
 			c[j] = x[j-1] / z[j-1]
 			sigmas[j] = subdiagonal[j-2]/z[j-1]
