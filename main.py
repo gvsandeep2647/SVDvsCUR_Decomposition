@@ -114,7 +114,7 @@ for k in range(0,dimension-2):
 
 	for s in range(k+1,dimension):
 		PROD = PROD + v[s]*u[s]
-	print PROD
+	
 	for j in range(k,dimension):
 		z[j] = u[j] - (PROD/(2*RSQ))*v[j]
 
@@ -177,8 +177,8 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 			dimension = dimension - 1
 			for j in range(0,dimension):
 				diagonal[j] = diagonal[j+1]
-			for j in range(1,len(subdiagonal)):
-				subdiagonal[j-1] = subdiagonal[j]
+			for j in range(0,dimension-1):
+				subdiagonal[j] = subdiagonal[j+1]
 		
 		if dimension == 0 : break
 
@@ -187,7 +187,7 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 			Lambda.append(_lambda)
 			break
 
-		for j in range(2,dimension-1):
+		for j in range(1,dimension-2):
 			if subdiagonal[j-2] <= TOL :
 				QR_Decomposition(diagonal[0:j-1],subdiagonal[0:j-2],dimension)
 				QR_Decomposition(diagonal[j-1:dimension],subdiagonal[j-1:dimension-1],dimension)
