@@ -150,7 +150,6 @@ for i in range(1,dimension):
 	subdiagonal.append(house_ratings[i][i-1])
 Lambda = []
 
-
 def QR_Decomposition(diagonal,subdiagonal,dimension):
 	global Lambda
 	c = [0.0]*dimension
@@ -164,14 +163,21 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 	z = [0.0]*dimension
 	M = 20
 	TOL = 0.0001
-	k = 0
+
+	#1
+	k = 1
 	SHIFT = 0
+
+	#2
 	while k<=M:
+
+		#3
 		if abs(subdiagonal[dimension-1])<=TOL:
 			_lambda = diagonal[dimension-1] + SHIFT
 			Lambda.append(_lambda)
 			dimension = dimension - 1
 
+		#4
 		if abs(subdiagonal[1])<=TOL:
 			_lambda = diagonal[0] + SHIFT
 			Lambda.append(_lambda)
