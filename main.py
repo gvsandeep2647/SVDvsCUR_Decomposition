@@ -143,6 +143,7 @@ OUTPUT : Eigen values of A (house_ratings)
 copy_dimension = dimension
 diagonal = []
 subdiagonal = []
+subdiagonal.append(0)
 for i in range(0,dimension):
 	diagonal.append(house_ratings[i][i])
 for i in range(1,dimension):
@@ -166,20 +167,20 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 	k = 0
 	SHIFT = 0
 	while k<=M:
-		if abs(subdiagonal[dimension-2])<=TOL:
+		if abs(subdiagonal[dimension-1])<=TOL:
 			_lambda = diagonal[dimension-1] + SHIFT
 			Lambda.append(_lambda)
 			dimension = dimension - 1
 
-		if abs(subdiagonal[0])<=TOL:
+		if abs(subdiagonal[1])<=TOL:
 			_lambda = diagonal[0] + SHIFT
 			Lambda.append(_lambda)
 			dimension = dimension - 1
 			for j in range(0,dimension):
 				diagonal[j] = diagonal[j+1]
-			for j in range(1,len(subdiagonal)):
-				subdiagonal[j-1] = subdiagonal[j]
-		
+				subdiagonal[j] = subdiagonal[j+1]			
+		subdiagonal[0] = 0
+
 		if dimension == 0 : break
 
 		if dimension == 1 :
@@ -188,8 +189,8 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 			break
 
 		for j in range(2,dimension-1):
-			if subdiagonal[j-2] <= TOL :
-				QR_Decomposition(diagonal[0:j-1],subdiagonal[0:j-2],dimension)
+			if subdiagonal[j-1] <= TOL :
+				QR_Decomposition(diagonal[0:j-1],subdiagonal[1:j-1],dimension)
 				QR_Decomposition(diagonal[j-1:dimension],subdiagonal[j-1:dimension-1],dimension)
 				break
 
