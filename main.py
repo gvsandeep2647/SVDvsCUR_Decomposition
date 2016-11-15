@@ -162,7 +162,7 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 	sigmas= [0.0]*dimension
 	z = [0.0]*dimension
 	M = 20
-	TOL = 0.001
+	TOL = 0.0001
 	k = 0
 	SHIFT = 0
 	while k<=M:
@@ -175,22 +175,22 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 			_lambda = diagonal[0] + SHIFT
 			Lambda.append(_lambda)
 			dimension = dimension - 1
-			diagonal[0] = diagonal[1]
-			for j in range(1,dimension):
+			for j in range(0,dimension):
 				diagonal[j] = diagonal[j+1]
-				subdiagonal[j-2] = subdiagonal[j-1]
+			for j in range(1,len(subdiagonal)):
+				subdiagonal[j-1] = subdiagonal[j]
 		
 		if dimension == 0 : break
 
 		if dimension == 1 :
-			_lambda = house_ratings[0][0] + SHIFT
+			_lambda = diagonal[0] + SHIFT
 			Lambda.append(_lambda)
 			break
 
 		for j in range(2,dimension-1):
 			if subdiagonal[j-2] <= TOL :
-				QR_Decomposition(diagonal[0:j],subdiagonal[0:j-3],dimension)
-				QR_Decomposition(diagonal[j:dimension],subdiagonal[j-1:dimension-2],dimension)
+				QR_Decomposition(diagonal[0:j-1],subdiagonal[0:j-2],dimension)
+				QR_Decomposition(diagonal[j-1:dimension],subdiagonal[j-1:len(subdiagonal)-1],dimension)
 				break
 
 		B = -(diagonal[dimension-2]+diagonal[dimension-1])
