@@ -46,7 +46,6 @@ ratings = np.zeros((max_user, max_item))
 for rating in rating_list:
 	ratings[rating[0]-1][rating[1]-1] = rating[2]
 
-
 """
 '''
 Caluclating the Frobenius Error obtained by using the inbuilt SVD package of Python
@@ -148,7 +147,6 @@ for i in range(0,dimension):
 for i in range(1,dimension):
 	subdiagonal.append(house_ratings[i][i-1])
 Lambda = []
-print house_ratings.shape
 
 def QR_Decomposition(diagonal,subdiagonal,dimension):
 	global Lambda
@@ -162,25 +160,18 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 	sigmas= [0.0]*dimension
 	z = [0.0]*dimension
 	M = 20
-	TOL = 0.0001
+	TOL = 0.00001
 	temp = 0
 	subdiagonal = [temp] + subdiagonal
-	print subdiagonal
-	#1
 	k = 1
 	SHIFT = 0
 
-	#2
 	while k<=M:
-
-		#3
-		print dimension-1
 		if abs(subdiagonal[dimension-1])<=TOL:
 			_lambda = diagonal[dimension-1] + SHIFT
 			Lambda.append(_lambda)
 			dimension = dimension - 1
 
-		#4
 		if abs(subdiagonal[1])<=TOL:
 			_lambda = diagonal[0] + SHIFT
 			Lambda.append(_lambda)
@@ -269,5 +260,20 @@ def QR_Decomposition(diagonal,subdiagonal,dimension):
 
 
 QR_Decomposition(diagonal,subdiagonal,dimension)
-print len(Lambda)
+Lambda = sorted(Lambda)
+neg_energy = 0.0
+energy = 0.0
+
+for j in Lambda:
+	energy = energy + j**2
+
+for j in xrange(len(Lambda)):
+	neg_energy = neg_energy + Lambda[j]**2
+	if neg_energy/energy < 0.099:
+		Lambda[j] = 0.0
+
+for j in Lambda[:]:
+	if j == 0:
+		Lambda.remove(j)
+
 print Lambda
