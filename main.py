@@ -55,7 +55,7 @@ def handle_input(filename):
 		ratings[rating[0]-1][rating[1]-1] = rating[2]
 
 	return ratings
-##############################################################
+############################################################################################################
 
 ratings = handle_input("test1.txt")
 
@@ -74,8 +74,12 @@ def calc_error(ratings_svd):
 
 	error = math.sqrt(error)
 	return error
-##############################################################
+############################################################################################################
 
+
+'''
+USING THE BUILT IN SVD FUNCTION OF PYHTON LANGUAGE (numpy.linalg.svd(matrix))
+'''
 U,sigma,V = LA.svd(ratings,full_matrices=False)
 final_sigma = np.zeros((len(sigma),len(sigma)))
 for i in range(0,len(sigma)):
@@ -126,7 +130,7 @@ def eigen_pairs(matrix):
 		final_eigen_pairs[round(j.real,2)] =  eigen_pairs[j].real
 
 	return final_eigen_pairs
-##############################################################
+############################################################################################################
 
 for_U = eigen_pairs(np.dot(ratings,ratings.T))
 for_V = eigen_pairs(np.dot(ratings.T,ratings))
@@ -137,26 +141,45 @@ for j in for_U:
 		eigen_values.append(j)
 
 eigen_values = sorted(eigen_values)[::-1]
+
 sigma  = np.zeros((len(eigen_values),len(eigen_values)))
 U = np.zeros((len(for_U[eigen_values[0]]),len(eigen_values)))
 V = np.zeros((len(for_V[eigen_values[0]]),len(eigen_values)))
+
+
 for j in xrange(len(eigen_values)):
 	for i in xrange(len(for_U[eigen_values[0]])):
 		U[i][j] = for_U[eigen_values[j]][i]
 	for i in xrange(len(for_V[eigen_values[0]])):
 		V[i][j] = for_V[eigen_values[j]][i]
 	sigma[j][j] = eigen_values[j]**0.5
-	#U.append(for_U[eigen_values[j]])
-	#V.append(for_V[eigen_values[j]])
+
+def dot_product(temp1, temp2):
+	temp_answer = 0.0
+	for j in xrange(len(temp1)) :
+		temp_answer = temp_answer + temp1[j]*temp2[j]
+	temp_answer = abs(temp_answer)**0.5
+	return temp_answer
+
+def gram_schmidt(matrix):
+	degree_vector = len(matrix)
+	no_of_vectors = len(matrix[0])
+	U = np.zeros((degree_vector,no_of_vectors))
+	U[:,0] = matrix[:,0]/dot_product(matrix[:,0],matrix[:,0])
+	for i in range(1,no_of_vectors):
+		U[:,i] = matrix[:,i]
+		for j in range(0,i-1):
+			U[:,i] = U[:,i] - (dot_product(U[:,i],U[:,j]))*U[:,j]
+		U[:,i] = U[:,i]/dot_product(U[:,i],U[:,i])
+	return U
+
+V = gram_schmidt(V)
 
 
 V = V.T
 print V
-U[0][1] = -1*U[0][1]
-U[1][1] = -1*U[1][1]
-
 final_matrix =  np.dot(U,np.dot(sigma,V))
 final_matrix = final_matrix.tolist()
 
-print final_matrix
+#print final_matrix
 print calc_error(final_matrix)
