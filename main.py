@@ -76,6 +76,10 @@ def calc_error(ratings_svd):
 	return error
 ##############################################################
 
+
+'''
+USING THE BUILT IN SVD FUNCTION OF PYHTON LANGUAGE (numpy.linalg.svd(matrix))
+'''
 U,sigma,V = LA.svd(ratings,full_matrices=False)
 final_sigma = np.zeros((len(sigma),len(sigma)))
 for i in range(0,len(sigma)):
@@ -144,7 +148,6 @@ for j in xrange(len(eigen_values)):
 	U.append(for_U[eigen_values[j]])
 	V.append(for_V[eigen_values[j]])
 	sigma[j][j] = eigen_values[j]**0.5
-
 U = np.matrix(U).T
 V = np.matrix(V)
 
