@@ -58,7 +58,7 @@ def handle_input(filename):
 	return ratings
 
 
-ratings = handle_input("test.txt")
+ratings = handle_input("test1.txt")
 
 '''
 FINDING THE SIGNIFICANT EIGEN_VALUES AND EIGEN_VECTORS
@@ -111,4 +111,5 @@ for j in xrange(len(eigen_values)):
 	sigma[j][j] = eigen_values[j]**0.5
 
 U = np.matrix(U)
-print np.dot(U.T,np.dot(sigma,V))
+V = np.matrix(V)
+print U
