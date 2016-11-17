@@ -137,17 +137,24 @@ for j in for_U:
 
 eigen_values = sorted(eigen_values)[::-1]
 sigma  = np.zeros((len(eigen_values),len(eigen_values)))
-U = []
-V = []
+U = np.zeros((len(for_U[eigen_values[0]]),len(eigen_values)))
+V = np.zeros((len(for_V[eigen_values[0]]),len(eigen_values)))
 for j in xrange(len(eigen_values)):
-	U.append(for_U[eigen_values[j]])
-	V.append(for_V[eigen_values[j]])
+	for i in xrange(len(for_U[eigen_values[0]])):
+		U[i][j] = for_U[eigen_values[j]][i]
+	for i in xrange(len(for_V[eigen_values[0]])):
+		V[i][j] = for_V[eigen_values[j]][i]
 	sigma[j][j] = eigen_values[j]**0.5
+	#U.append(for_U[eigen_values[j]])
+	#V.append(for_V[eigen_values[j]])
 
-U = np.matrix(U).T
-print U
-V = np.matrix(V)
+V = V.T
+print V
+U[0][1] = -1*U[0][1]
+U[1][1] = -1*U[1][1]
 
 final_matrix =  np.dot(U,np.dot(sigma,V))
 final_matrix = final_matrix.tolist()
+
+print final_matrix
 print calc_error(final_matrix)
