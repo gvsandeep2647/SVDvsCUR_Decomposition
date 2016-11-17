@@ -90,7 +90,7 @@ def eigen_pairs(matrix):
 
 	final_eigen_pairs = {}
 	for j in eigen_values:
-		final_eigen_pairs[j] = eigen_pairs[j]
+		final_eigen_pairs[round(j.real,2)] =  eigen_pairs[j].real
 
 	return final_eigen_pairs
 
@@ -101,4 +101,14 @@ eigen_values = []
 for j in for_U:
 	eigen_values.append(j)
 
-eigen_values = sorted(eigen_values)
+eigen_values = sorted(eigen_values)[::-1]
+sigma  = np.zeros((len(eigen_values),len(eigen_values)))
+U = []
+V = []
+for j in xrange(len(eigen_values)):
+	U.append(for_U[eigen_values[j]])
+	V.append(for_V[eigen_values[j]])
+	sigma[j][j] = eigen_values[j]**0.5
+
+U = np.matrix(U)
+print np.dot(U.T,np.dot(sigma,V))
