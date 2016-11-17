@@ -60,6 +60,28 @@ def handle_input(filename):
 
 ratings = handle_input("test1.txt")
 
+
+'''
+Caluclating the Frobenius Error obtained by using the inbuilt SVD package of Python
+'''
+U,sigma,V = LA.svd(ratings,full_matrices=False)
+final_sigma = np.zeros((len(sigma),len(sigma)))
+for i in range(0,len(sigma)):
+	final_sigma[i][i] = sigma[i]
+
+
+ratings_svd = np.dot(U, np.dot(final_sigma, V))
+error = 0
+
+for i in range(0,len(ratings)):
+	for j in range(0,len(ratings[i])):
+		error = error + (ratings[i][j]-ratings_svd[i][j])**2
+
+error = math.sqrt(error) # IDEAL FROBENIUS ERROR 
+print error
+
+
+
 '''
 FINDING THE SIGNIFICANT EIGEN_VALUES AND EIGEN_VECTORS
 Input : 
@@ -73,6 +95,7 @@ def eigen_pairs(matrix):
 		eigen_pairs[eigen_values[i]] = eigen_vectors[:,i]
 
 	eigen_values = sorted(eigen_values)
+	"""	
 	neg_energy = 0.0
 	energy = 0.0
 
@@ -87,6 +110,7 @@ def eigen_pairs(matrix):
 	for j in eigen_values[:]:
 		if j == 0:
 			eigen_values.remove(j)
+	"""
 
 	final_eigen_pairs = {}
 	for j in eigen_values:
@@ -110,6 +134,20 @@ for j in xrange(len(eigen_values)):
 	V.append(for_V[eigen_values[j]])
 	sigma[j][j] = eigen_values[j]**0.5
 
-U = np.matrix(U)
+U = np.matrix(U).T
 V = np.matrix(V)
-print U
+
+
+final_matrix =  np.dot(U,np.dot(sigma,V))
+final_matrix = final_matrix.tolist()
+
+
+error = 0
+
+for i in range(0,len(ratings)):
+	for j in range(0,len(ratings[i])):
+		error = error + (ratings[i][j]-final_matrix[i][j])**2
+
+error = math.sqrt(error) # IDEAL FROBENIUS ERROR 
+
+print error
