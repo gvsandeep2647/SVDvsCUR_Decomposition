@@ -19,7 +19,6 @@ from numpy import linalg as LA
 
 def handle_input(filename):
 
-
 	'''
 	TAKING INPUT AND FORMING A MATRIX OUT OF IT
 	Input : A text file containing lines of the format "USER_ID ITEM_ID RATING"
@@ -61,9 +60,22 @@ def handle_input(filename):
 ratings = handle_input("test1.txt")
 
 
-'''
-Caluclating the Frobenius Error obtained by using the inbuilt SVD package of Python
-'''
+def calc_error(ratings_svd):
+	
+	'''
+	Caluclating the Frobenius Error
+	'''
+	
+	error = 0
+
+	for i in range(0,len(ratings)):
+		for j in range(0,len(ratings[i])):
+			error = error + (ratings[i][j]-ratings_svd[i][j])**2
+
+	error = math.sqrt(error)
+	return error
+
+
 U,sigma,V = LA.svd(ratings,full_matrices=False)
 final_sigma = np.zeros((len(sigma),len(sigma)))
 for i in range(0,len(sigma)):
@@ -71,23 +83,18 @@ for i in range(0,len(sigma)):
 
 
 ratings_svd = np.dot(U, np.dot(final_sigma, V))
-error = 0
 
-for i in range(0,len(ratings)):
-	for j in range(0,len(ratings[i])):
-		error = error + (ratings[i][j]-ratings_svd[i][j])**2
+print calc_error(ratings_svd) #IDEAL ERROR
 
-error = math.sqrt(error) # IDEAL FROBENIUS ERROR 
-print error
-
-
-
-'''
-FINDING THE SIGNIFICANT EIGEN_VALUES AND EIGEN_VECTORS
-Input : 
-'''
 
 def eigen_pairs(matrix):
+	
+	'''
+	FINDING THE SIGNIFICANT EIGEN_VALUES AND EIGEN_VECTORS
+	Input : A Matrix
+	Output : A dicitonary with keys as eigen values and value as the corressponding eigen vector
+	'''
+
 	for_U = matrix
 	eigen_values,eigen_vectors = LA.eig(for_U)
 	eigen_pairs = {}
@@ -95,6 +102,8 @@ def eigen_pairs(matrix):
 		eigen_pairs[eigen_values[i]] = eigen_vectors[:,i]
 
 	eigen_values = sorted(eigen_values)
+	
+
 	"""	
 	neg_energy = 0.0
 	energy = 0.0
@@ -123,7 +132,8 @@ for_V = eigen_pairs(np.dot(ratings.T,ratings))
 
 eigen_values = []
 for j in for_U:
-	eigen_values.append(j)
+	if j !=0 :
+		eigen_values.append(j)
 
 eigen_values = sorted(eigen_values)[::-1]
 sigma  = np.zeros((len(eigen_values),len(eigen_values)))
@@ -135,19 +145,9 @@ for j in xrange(len(eigen_values)):
 	sigma[j][j] = eigen_values[j]**0.5
 
 U = np.matrix(U).T
+print U
 V = np.matrix(V)
-
 
 final_matrix =  np.dot(U,np.dot(sigma,V))
 final_matrix = final_matrix.tolist()
-
-
-error = 0
-
-for i in range(0,len(ratings)):
-	for j in range(0,len(ratings[i])):
-		error = error + (ratings[i][j]-final_matrix[i][j])**2
-
-error = math.sqrt(error) # IDEAL FROBENIUS ERROR 
-
-print error
+print calc_error(final_matrix)
