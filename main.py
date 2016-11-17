@@ -97,3 +97,8 @@ def eigen_pairs(matrix):
 for_U = eigen_pairs(np.dot(ratings,ratings.T))
 for_V = eigen_pairs(np.dot(ratings.T,ratings))
 
+eigen_values = []
+for j in for_U:
+	eigen_values.append(j)
+
+eigen_values = sorted(eigen_values)
