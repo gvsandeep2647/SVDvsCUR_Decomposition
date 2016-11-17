@@ -55,7 +55,7 @@ def handle_input(filename):
 		ratings[rating[0]-1][rating[1]-1] = rating[2]
 
 	return ratings
-
+##############################################################
 
 ratings = handle_input("test1.txt")
 
@@ -74,7 +74,7 @@ def calc_error(ratings_svd):
 
 	error = math.sqrt(error)
 	return error
-
+##############################################################
 
 U,sigma,V = LA.svd(ratings,full_matrices=False)
 final_sigma = np.zeros((len(sigma),len(sigma)))
@@ -126,6 +126,7 @@ def eigen_pairs(matrix):
 		final_eigen_pairs[round(j.real,2)] =  eigen_pairs[j].real
 
 	return final_eigen_pairs
+##############################################################
 
 for_U = eigen_pairs(np.dot(ratings,ratings.T))
 for_V = eigen_pairs(np.dot(ratings.T,ratings))
@@ -147,6 +148,7 @@ for j in xrange(len(eigen_values)):
 	sigma[j][j] = eigen_values[j]**0.5
 	#U.append(for_U[eigen_values[j]])
 	#V.append(for_V[eigen_values[j]])
+
 
 V = V.T
 print V
