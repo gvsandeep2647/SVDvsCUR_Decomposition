@@ -132,8 +132,27 @@ def eigen_pairs(matrix):
 	return final_eigen_pairs
 ############################################################################################################
 
-for_U = eigen_pairs(np.dot(ratings,ratings.T))
-for_V = eigen_pairs(np.dot(ratings.T,ratings))
+#for_U = eigen_pairs(np.dot(ratings,ratings.T))
+#for_V = eigen_pairs(np.dot(ratings.T,ratings))
+
+def basicQR(A):
+	u = np.zeros((len(A),len(A[0])))
+	for i in xrange(len(A)):
+		u[i][i] = 1
+	for k in xrange(100):
+		q,r = LA.qr(A)
+		A = np.dot(r,q)
+		u = np.dot(u,q)
+	ev = []
+	ep = {}
+	for i in xrange(len(A)):
+		ev.append(round(A[i][i],2))
+	for i in xrange(len(ev)):
+		ep[ev[i]] = u[:,i]
+	return ep
+
+for_U = basicQR(np.dot(ratings, ratings.T))
+for_V = basicQR(np.dot(ratings.T,ratings))
 
 eigen_values = []
 for j in for_U:
@@ -173,11 +192,19 @@ def gram_schmidt(matrix):
 		U[:,i] = U[:,i]/dot_product(U[:,i],U[:,i])
 	return U
 
-V = gram_schmidt(V)
+def usingQR(A):
+	q,r = LA.qr(A)
+	s = np.zeros((len(r),len(r[0])))
+	for i in xrange(len(r)):
+		if r[i][i]>0:
+			s[i][i] = 1
+		elif r[i][i]<0:
+			s[i][i] = -1
+	b = np.dot(q,s)
+	print b	
 
 
-V = V.T
-print V
+V=V.T
 final_matrix =  np.dot(U,np.dot(sigma,V))
 final_matrix = final_matrix.tolist()
 
