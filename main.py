@@ -119,7 +119,8 @@ def basicQR(A):
 	u = np.zeros((len(A),len(A[0])))
 	for i in xrange(len(A)):
 		u[i][i] = 1
-	for k in xrange(200):
+	for k in xrange(100):
+		print k
 		q,r = LA.qr(A)
 		A = np.dot(r,q)
 		u = np.dot(u,q)
@@ -127,7 +128,6 @@ def basicQR(A):
 	ep = {}
 	for i in xrange(len(A)):
 		ev.append(round(A[i][i],2))
-	for i in xrange(len(ev)):
 		ep[ev[i]] = u[:,i]
 	return ep
 
@@ -135,22 +135,38 @@ def basicQR(A):
 
 
 eigen_values = []
+eigen_values_V = []
 for j in for_U:
 	if abs(j) !=0 :
 		eigen_values.append(j)
 
+for j in for_V:
+	if j!=0:
+		eigen_values_V.append(j)
+
+
 eigen_values = sorted(eigen_values)[::-1]
+eigen_values_V = sorted(eigen_values_V)[::-1]
+print eigen_values
+print eigen_values_V	
 
 sigma  = np.zeros((len(eigen_values),len(eigen_values)))
 U = np.zeros((len(for_U[eigen_values[0]]),len(eigen_values)))
 V = np.zeros((len(for_V[eigen_values[0]]),len(eigen_values)))
 
 for j in xrange(len(eigen_values)):
+	if(eigen_values[j] != eigen_values_V[j]):
+		if eigen_values[j] > eigen_values_V[j]:
+			sigma[j][j] = eigen_values[j]**0.5
+		else :
+			sigma[j][j] = eigen_values_V[j]**0.5
+	else:
+		sigma[j][j] = eigen_values[j]**0.5
 	for i in xrange(len(for_U[eigen_values[0]])):
 		U[i][j] = for_U[eigen_values[j]][i]
-	for i in xrange(len(for_V[eigen_values[0]])):
-		V[i][j] = for_V[eigen_values[j]][i]
-	sigma[j][j] = eigen_values[j]**0.5
+	for i in xrange(len(for_V[eigen_values_V[0]])):
+		V[i][j] = for_V[eigen_values_V[j]][i]
+	
 
 V=V.T
 final_matrix =  np.dot(U,np.dot(sigma,V))
