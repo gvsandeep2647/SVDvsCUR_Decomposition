@@ -55,10 +55,10 @@ def handle_input(filename):
 		ratings[rating[0]-1][rating[1]-1] = rating[2]
 
 	return ratings
+
+ratings = handle_input("test.txt")
+
 ############################################################################################################
-
-ratings = handle_input("test1.txt")
-
 
 def calc_error(ratings_svd):
 	
@@ -74,8 +74,8 @@ def calc_error(ratings_svd):
 
 	error = math.sqrt(error)
 	return error
-############################################################################################################
 
+############################################################################################################
 
 '''
 USING THE BUILT IN SVD FUNCTION OF PYHTON LANGUAGE (numpy.linalg.svd(matrix))
@@ -106,40 +106,20 @@ def eigen_pairs(matrix):
 		eigen_pairs[eigen_values[i]] = eigen_vectors[:,i]
 
 	eigen_values = sorted(eigen_values)
-	
-
-	"""	
-	neg_energy = 0.0
-	energy = 0.0
-
-	for j in eigen_values:
-		energy = energy + j
-
-	for j in xrange(len(eigen_values)):
-		neg_energy = neg_energy + eigen_values[j]
-		if neg_energy/energy < 0.099:
-			eigen_values[j] = 0.0
-
-	for j in eigen_values[:]:
-		if j == 0:
-			eigen_values.remove(j)
-	"""
 
 	final_eigen_pairs = {}
 	for j in eigen_values:
 		final_eigen_pairs[round(j.real,2)] =  eigen_pairs[j].real
 
 	return final_eigen_pairs
-############################################################################################################
 
-#for_U = eigen_pairs(np.dot(ratings,ratings.T))
-#for_V = eigen_pairs(np.dot(ratings.T,ratings))
+############################################################################################################
 
 def basicQR(A):
 	u = np.zeros((len(A),len(A[0])))
 	for i in xrange(len(A)):
 		u[i][i] = 1
-	for k in xrange(100):
+	for k in xrange(200):
 		q,r = LA.qr(A)
 		A = np.dot(r,q)
 		u = np.dot(u,q)
@@ -151,12 +131,77 @@ def basicQR(A):
 		ep[ev[i]] = u[:,i]
 	return ep
 
-for_U = basicQR(np.dot(ratings, ratings.T))
-for_V = basicQR(np.dot(ratings.T,ratings))
+############################################################################################################
+
+
+
+
+'''
+TRIDIAGONALIZATION
+GIVEN A SQUARE MATRIX, CALCULATION OF IT's HOUSEHOLDER TRIDIAGONAL TRANSFORMATION
+Input : ratings X ratings.transpose (the required square matrix)
+Output : The tridagonal form of the matrix
+'''
+def householder_tranformation(ratings):
+	house_ratings = np.dot(ratings,ratings.T) 
+	dimension = house_ratings.shape[0]
+	v = [0.0] * dimension
+	u = [0.0] * dimension
+	z = [0.0] * dimension
+	for k in range(0,dimension-2):
+		q = 0.0
+		alpha = 0.0
+		PROD = 0.0
+		RSQ = 0.0
+		for j in range(k,dimension):
+			q = q + house_ratings[j][k]**2
+
+		if house_ratings[k+1][k] == 0 :
+			alpha = -(q**0.5)
+		else:
+			alpha = -(((q**0.5)*house_ratings[k+1][k])/(abs(house_ratings[k+1][k])))
+
+		RSQ = (alpha**2) - alpha*(house_ratings[k+1][k])
+		
+		v[k] = 0
+		v[k+1] = house_ratings[k+1][k] - alpha
+		for j in range(k+2,dimension):
+			v[j] = house_ratings[j][k]
+
+		for j in range(k,dimension):
+			for s in range(k+1,dimension):
+				u[j] = u[j] + house_ratings[j][s]*v[s]
+			u[j] = (1/RSQ)*u[j]
+
+		for s in range(k+1,dimension):
+			PROD = PROD + v[s]*u[s]
+		
+		for j in range(k,dimension):
+			z[j] = u[j] - (PROD/(2*RSQ))*v[j]
+
+		for l in range(k+1,dimension-1):
+			for j in range(l+1,dimension):
+				house_ratings[j][l] = house_ratings[j][l] - v[l]*z[j] - v[j]*z[l]
+				house_ratings[l][j] = house_ratings[j][l]
+			house_ratings[l][l] = house_ratings[l][l] - 2*v[l]*z[l]
+
+		house_ratings[dimension-1][dimension-1] = house_ratings[dimension-1][dimension-1] - 2*v[dimension-1]*z[dimension-1]
+
+		for j in range(k+2,dimension):
+			house_ratings[k][j] = 0
+			house_ratings[j][k] = 0
+
+		house_ratings[k+1][k] = house_ratings[k+1][k] - v[k+1]*z[k]
+		house_ratings[k][k+1] = house_ratings[k][k+1]
+	return house_ratings
+
+
+for_U = basicQR(householder_tranformation(np.dot(ratings,ratings.T)))
+for_V = basicQR(householder_tranformation(np.dot(ratings.T,ratings)))
 
 eigen_values = []
 for j in for_U:
-	if j !=0 :
+	if abs(j) !=0 :
 		eigen_values.append(j)
 
 eigen_values = sorted(eigen_values)[::-1]
@@ -165,7 +210,6 @@ sigma  = np.zeros((len(eigen_values),len(eigen_values)))
 U = np.zeros((len(for_U[eigen_values[0]]),len(eigen_values)))
 V = np.zeros((len(for_V[eigen_values[0]]),len(eigen_values)))
 
-
 for j in xrange(len(eigen_values)):
 	for i in xrange(len(for_U[eigen_values[0]])):
 		U[i][j] = for_U[eigen_values[j]][i]
@@ -173,40 +217,8 @@ for j in xrange(len(eigen_values)):
 		V[i][j] = for_V[eigen_values[j]][i]
 	sigma[j][j] = eigen_values[j]**0.5
 
-def dot_product(temp1, temp2):
-	temp_answer = 0.0
-	for j in xrange(len(temp1)) :
-		temp_answer = temp_answer + temp1[j]*temp2[j]
-	temp_answer = abs(temp_answer)**0.5
-	return temp_answer
-
-def gram_schmidt(matrix):
-	degree_vector = len(matrix)
-	no_of_vectors = len(matrix[0])
-	U = np.zeros((degree_vector,no_of_vectors))
-	U[:,0] = matrix[:,0]/dot_product(matrix[:,0],matrix[:,0])
-	for i in range(1,no_of_vectors):
-		U[:,i] = matrix[:,i]
-		for j in range(0,i-1):
-			U[:,i] = U[:,i] - (dot_product(U[:,i],U[:,j]))*U[:,j]
-		U[:,i] = U[:,i]/dot_product(U[:,i],U[:,i])
-	return U
-
-def usingQR(A):
-	q,r = LA.qr(A)
-	s = np.zeros((len(r),len(r[0])))
-	for i in xrange(len(r)):
-		if r[i][i]>0:
-			s[i][i] = 1
-		elif r[i][i]<0:
-			s[i][i] = -1
-	b = np.dot(q,s)
-	print b	
-
-
 V=V.T
 final_matrix =  np.dot(U,np.dot(sigma,V))
 final_matrix = final_matrix.tolist()
 
-#print final_matrix
 print calc_error(final_matrix)
