@@ -57,7 +57,7 @@ def handle_input(filename):
 
 	return ratings
 
-ratings = handle_input("test.txt")
+ratings = handle_input("ratings.txt")
 
 ############################################################################################################
 

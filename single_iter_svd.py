@@ -15,6 +15,7 @@
 
 import numpy as np
 import math
+import time
 from numpy import linalg as LA
 
 def handle_input(filename):
@@ -56,7 +57,7 @@ def handle_input(filename):
 
 	return ratings
 
-ratings = handle_input("ratings.txt")
+ratings = handle_input("test.txt")
 
 ############################################################################################################
 
@@ -142,6 +143,10 @@ def svd(ratings):
 
 	return U,sigma,V
 
+############################################################################################################
+
+start_time  = time.time()
+
 U,sigma,V = svd(ratings)
 
 final_matrix = (np.dot(U,np.dot(sigma,V)))
@@ -162,3 +167,6 @@ final_matrix = final_matrix.tolist()
 error = calc_error(final_matrix)
 print "\nPrinting the frobenius error:"
 print error
+
+print " ************* Execution Time : ************* "
+print "--- %s seconds ---" %(time.time() - start_time)

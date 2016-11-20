@@ -80,4 +80,3 @@ R = R.transpose()
 U = np.dot(np.linalg.pinv(C),np.dot(ratings,np.linalg.pinv(R)))
 final = np.dot(C,np.dot(U,R))
 print final
-
