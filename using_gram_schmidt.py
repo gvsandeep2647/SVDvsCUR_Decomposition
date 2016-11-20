@@ -116,21 +116,22 @@ def eigen_pairs(matrix):
 ############################################################################################################
 
 def orthonormalize(arr):
-    arr = arr.T
-    n,m = arr.shape
-    ret = np.zeros((n,m))
-    ret[0] = arr[0]
-    ret[0] = ret[0]/LA.norm(ret[0])
-    for i in xrange(1,n):
-        ret[i] = arr[i]
-        for j in xrange(i):
-            x1 = np.dot(ret[j],ret[j])
-            x2 = np.dot(arr[i],ret[j])
-            rat = x2/x1
-            ret[i] = ret[i]-(rat*ret[j])
-        ret[i] = ret[i]/np.linalg.norm(ret[i])
-    ret = ret.T
-    return ret
+	arr = arr.T
+	n,m = arr.shape
+	ret = np.zeros((n,m))
+	ret[0] = arr[0]
+	ret[0] = ret[0]/LA.norm(ret[0])
+	for i in xrange(1,n):
+	    ret[i] = arr[i]
+	    for j in xrange(i):
+	        x1 = np.dot(ret[j],ret[j])
+	        x2 = np.dot(arr[i],ret[j])
+	        rat = x2/x1
+	        ret[i] = ret[i]-(rat*ret[j])
+	    ret[i] = ret[i]/LA.norm(ret[i])
+
+	ret = ret.T
+	return ret
 
 #############################################################################################################
 
@@ -148,21 +149,19 @@ for i in range(0,len(eigen_values)):
 	U.append(for_U[eigen_values[i]])
 
 U = np.matrix(U)
-print U
-U = orthonormalize(U)
-print U
+U = orthonormalize(U).T
 
 V = []
 for i in range(0,len(eigen_values)):
 	V.append(for_U[eigen_values[i]])
 
 V = np.matrix(V)
-V = orthonormalize(V.T)
+V = orthonormalize(V)
 
 sigma = np.zeros((len(eigen_values),len(eigen_values)))
 for i in xrange(len(eigen_values)):
 	sigma[i][i] = eigen_values[i]**0.5
 
-final_matrix = np.dot(U,np.dot(sigma,V))
+final_matrix = (np.dot(U,np.dot(sigma,V)))
 print final_matrix
 print calc_error(final_matrix)
