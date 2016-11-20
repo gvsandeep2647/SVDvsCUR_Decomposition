@@ -1,0 +1,36 @@
+2
+Running U for column  0
+Currently,the best possible matrix 
+[[  9.94054677e-01   1.01171854e+00   9.94054677e-01  -1.32183979e-03
+   -1.32183979e-03]
+ [  2.98216403e+00   3.03515561e+00   2.98216403e+00  -3.96551937e-03
+   -3.96551937e-03]
+ [  3.97621871e+00   4.04687414e+00   3.97621871e+00  -5.28735915e-03
+   -5.28735915e-03]
+ [  4.97027338e+00   5.05859268e+00   4.97027338e+00  -6.60919894e-03
+   -6.60919894e-03]
+ [  3.60342729e-01   1.29217690e+00   3.60342729e-01   4.08018451e+00
+    4.08018451e+00]
+ [ -3.73825495e-01   7.34432591e-01  -3.73825495e-01   4.91662248e+00
+    4.91662248e+00]
+ [  1.80171364e-01   6.46088448e-01   1.80171364e-01   2.04009225e+00
+    2.04009225e+00]]
+Currently,the best possible error  1.34555973801
+Running U for column  1
+Running V for row  0
+Running V for row  1
+Running U for column  0  V for row  0
+Running U for column  0  V for row  1
+Running U for column  1  V for row  0
+Running U for column  1  V for row  1
+Frobenius Error Of the SVD Decomposition is :  1.34555973801
+The matrix obtained by multiplying U , sigma and V' :
+[[ 0.99  1.01  0.99 -0.   -0.  ]
+ [ 2.98  3.04  2.98 -0.   -0.  ]
+ [ 3.98  4.05  3.98 -0.01 -0.01]
+ [ 4.97  5.06  4.97 -0.01 -0.01]
+ [ 0.36  1.29  0.36  4.08  4.08]
+ [-0.37  0.73 -0.37  4.92  4.92]
+ [ 0.18  0.65  0.18  2.04  2.04]]
+ ************* Execution Time : ************* 
+--- 0.00408601760864 seconds ---
