@@ -17,67 +17,10 @@ import numpy as np
 import math
 import time
 from numpy import linalg as LA
-from single_iter_svd import svd
+from svd import svd
+from common import handle_input, calc_error
 
-def handle_input(filename):
 
-	'''
-	TAKING INPUT AND FORMING A MATRIX OUT OF IT
-	Input : A text file containing lines of the format "USER_ID ITEM_ID RATING"
-	Output : A matrix which stores this data 
-	'''
-
-	input_file = open(filename,"r")
-	rating_raw = input_file.readlines()
-	rating_list = []
-
-	for line in rating_raw:
-		ind_rating = []
-		line = line.split(" ")
-
-		user = int(line[0])
-		ind_rating.append(user)
-
-		item = int(line[1])
-		ind_rating.append(item)
-
-		rating = float(line[2])
-		ind_rating.append(rating)	
-		rating_list.append(ind_rating)
-
-	max_item = 0
-	max_user = rating_list[len(rating_list)-1][0]
-	for rating in rating_list:
-		if rating[1] > max_item:
-			max_item = rating[1]
-
-	ratings = np.zeros((max_user, max_item))
-
-	for rating in rating_list:
-		ratings[rating[0]-1][rating[1]-1] = rating[2]
-
-	return ratings
-
-ratings = handle_input("ratings.txt")
-
-############################################################################################################
-
-def calc_error(ratings_svd):
-	
-	'''
-	Caluclating the Frobenius Error
-	'''
-	
-	error = 0
-
-	for i in range(0,len(ratings)):
-		for j in range(0,len(ratings[i])):
-			error = error + (ratings[i][j]-ratings_svd[i][j])**2
-
-	error = math.sqrt(error)
-	return error
-
-############################################################################################################
 
 def calc_length(matrix):
 	total = 0
@@ -86,8 +29,6 @@ def calc_length(matrix):
 			total = total + matrix[i][j]**2
 
 	return total
-
-############################################################################################################
 
 def selection(matrix):
 
@@ -114,7 +55,7 @@ def selection(matrix):
 			k = k / factor
 	return compact_matrix,rows_selected
 
-############################################################################################################
+ratings = handle_input("ratings.txt")
 
 R,rows_selected = selection(ratings)
 C,columns_selected = selection(ratings.T)
@@ -140,4 +81,4 @@ R = np.matrix(R)
 
 final_matrix = np.dot(C,np.dot(intersection,R))
 print final_matrix
-print calc_error(final_matrix.tolist())
+print calc_error(ratings, final_matrix.tolist())
