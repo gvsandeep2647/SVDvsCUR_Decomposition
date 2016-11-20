@@ -76,21 +76,6 @@ def calc_error(ratings_svd):
 	return error
 
 ############################################################################################################
-
-'''
-USING THE BUILT IN SVD FUNCTION OF PYHTON LANGUAGE (numpy.linalg.svd(matrix))
-'''
-U,sigma,V = LA.svd(ratings,full_matrices=False)
-final_sigma = np.zeros((len(sigma),len(sigma)))
-for i in range(0,len(sigma)):
-	final_sigma[i][i] = sigma[i]
-
-
-ratings_svd = np.dot(U, np.dot(final_sigma, V))
-
-print "Error Calculated Using Inbuilt SVD Package :",calc_error(ratings_svd) #IDEAL ERROR
-
-############################################################################################################
 def eigen_pairs(matrix):
 	
 	'''
@@ -113,6 +98,7 @@ def eigen_pairs(matrix):
 	return final_eigen_pairs
 
 ############################################################################################################
+
 def print_matrix(matrix):
 
 	'''
@@ -129,31 +115,34 @@ def print_matrix(matrix):
 '''
 CALCULATING THE SINGULAR VALUE DECOMPOSTION BY COMPUTING THE EIGENVALUES AND EIGENVECTORS
 '''
+def svd(ratings):
+	for_U = eigen_pairs(np.dot(ratings,ratings.T))
+	for_V = eigen_pairs(np.dot(ratings.T,ratings))
 
-for_U = eigen_pairs(np.dot(ratings,ratings.T))
-for_V = eigen_pairs(np.dot(ratings.T,ratings))
+	eigen_values = []
+	for j in for_U:
+		if abs(j) !=0 :
+			eigen_values.append(round(j,2))
+	eigen_values = sorted(eigen_values)[::-1]
 
-eigen_values = []
-for j in for_U:
-	if abs(j) !=0 :
-		eigen_values.append(round(j,2))
-eigen_values = sorted(eigen_values)[::-1]
+	U = np.zeros((len(for_U[eigen_values[0]]),len(eigen_values)))
+	V = np.zeros((len(for_V[eigen_values[0]]),len(eigen_values)))
 
-U = np.zeros((len(for_U[eigen_values[0]]),len(eigen_values)))
-V = np.zeros((len(for_V[eigen_values[0]]),len(eigen_values)))
+	for j in xrange(len(eigen_values)):
+		for i in xrange(len(for_U[eigen_values[j]])):
+			U[i][j] = for_U[eigen_values[j]][i]
+		for i in xrange(len(for_V[eigen_values[j]])):
+			V[i][j] = for_V[eigen_values[j]][i]
 
-for j in xrange(len(eigen_values)):
-	for i in xrange(len(for_U[eigen_values[j]])):
-		U[i][j] = for_U[eigen_values[j]][i]
-	for i in xrange(len(for_V[eigen_values[j]])):
-		V[i][j] = for_V[eigen_values[j]][i]
+	V = V.T
 
-V = V.T
+	sigma = np.zeros((len(eigen_values),len(eigen_values)))
+	for i in xrange(len(eigen_values)):
+		sigma[i][i] = eigen_values[i]**0.5
 
-sigma = np.zeros((len(eigen_values),len(eigen_values)))
-for i in xrange(len(eigen_values)):
-	sigma[i][i] = eigen_values[i]**0.5
+	return U,sigma,V
 
+U,sigma,V = svd(ratings)
 
 final_matrix = (np.dot(U,np.dot(sigma,V)))
 
@@ -167,14 +156,9 @@ print "\nPrinting matrix sigma:"
 print sigma
 print "\nPrinting matrix V:"
 print V
-print "\nPrinting the final matrix got by multiplying U,sigma and V:"
+print "\nPrinting the final matrix got by multiplying U, sigma and V:"
 print final_matrix
 final_matrix = final_matrix.tolist()
-min_error = calc_error(final_matrix)
+error = calc_error(final_matrix)
 print "\nPrinting the frobenius error:"
-print min_error
-
-
-
-#print final_matrix
-#print calc_error(final_matrix)
+print error
