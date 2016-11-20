@@ -20,7 +20,7 @@ from numpy import linalg as LA
 from common import handle_input, calc_error, print_matrix
 from svd import svd
 
-ratings = handle_input("ratings.txt")
+ratings = handle_input("test.txt")
 
 start_time  = time.time()
 

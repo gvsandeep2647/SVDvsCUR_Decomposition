@@ -1,0 +1,77 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module multi_iter_svd</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>multi_iter_svd</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/sandeep/Desktop/Information Retrieval/SVD vs CUR/multi_iter_svd.py">/home/sandeep/Desktop/Information Retrieval/SVD vs CUR/multi_iter_svd.py</a></font></td></tr></table>
+    <p><tt>Assignment&nbsp;#2<br>
+Project:&nbsp;To&nbsp;implement&nbsp;both&nbsp;SVD&nbsp;and&nbsp;CUR&nbsp;Matrix&nbsp;decomposition&nbsp;algorithms&nbsp;and&nbsp;<br>
+compare&nbsp;their&nbsp;efficency&nbsp;(in&nbsp;terms&nbsp;of&nbsp;space,&nbsp;time&nbsp;etc.)<br>
+&nbsp;<br>
+Instructor:&nbsp;Dr.&nbsp;Aruna&nbsp;Malapati<br>
+&nbsp;<br>
+Contributors:&nbsp;G&nbsp;V&nbsp;Sandeep&nbsp;2014A7PS106H<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kushagra&nbsp;Agrawal&nbsp;2014AAPS334H<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Snehal&nbsp;Wadhwani&nbsp;2014A7PS430H<br>
+&nbsp;<br>
+Course:&nbsp;CS&nbsp;F469&nbsp;Information&nbsp;Retrieval</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="numpy.linalg.html">numpy.linalg</a><br>
+</td><td width="25%" valign=top><a href="math.html">math</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>U</strong> = array([[-0.13759913,  0.02361145],
+       [-0.41...-0.73131186],
+       [-0.07638754, -0.29555048]])<br>
+<strong>V</strong> = array([[ 0.56225841,  0.5928599 ,  0.56225841,  ...2877058,  0.12664138, -0.69537622, -0.69537622]])<br>
+<strong>eigen_values</strong> = [155.78, 90.41]<br>
+<strong>energy</strong> = 248.0<br>
+<strong>final_U</strong> = array([[-0.13759913,  0.02361145],
+       [-0.41...-0.73131186],
+       [-0.07638754, -0.29555048]])<br>
+<strong>final_V</strong> = array([[ 0.,  0.,  0.,  0.,  0.],
+       [ 0.,  0.,  0.,  0.,  0.]])<br>
+<strong>final_error</strong> = 1.3455597380105944<br>
+<strong>final_matrix</strong> = array([[ 0.99,  1.01,  0.99, -0.  , -0.  ],
+    ...92],
+       [ 0.18,  0.65,  0.18,  2.04,  2.04]])<br>
+<strong>for_U</strong> = {0.0: array([ -3.68669567e-01,   3.98403939e-01,  -7.2...e-15,   1.34134061e-15,
+        -5.57614120e-16]), 1.81: array([-0.01080847, -0.03242542, -0.04323389, -0...6,  0.65365084,
+       -0.67820922,  0.32682542]), 90.41: array([ 0.02361145,  0.07083435,  0.09444581,  0...6, -0.59110096,
+       -0.73131186, -0.29555048]), 155.78: array([-0.13759913, -0.41279738, -0.5503965 , -0...3, -0.15277509,
+       -0.07221651, -0.07638754])}<br>
+<strong>for_V</strong> = {-0.0: array([ -3.86164371e-02,   2.38280577e-16,   3.8...e-02,
+        -7.06051536e-01,   7.06051536e-01]), 1.81: array([-0.40966748,  0.80479152, -0.40966748, -0.0912571 , -0.0912571 ]), 90.41: array([ 0.12664138, -0.02877058,  0.12664138, -0.69537622, -0.69537622]), 155.78: array([ 0.56225841,  0.5928599 ,  0.56225841,  0.09013354,  0.09013354])}<br>
+<strong>i</strong> = 6<br>
+<strong>iter_error</strong> = 24.998439681562356<br>
+<strong>j</strong> = 4<br>
+<strong>neg_energy</strong> = 248.0<br>
+<strong>ratings</strong> = array([[ 1.,  1.,  1.,  0.,  0.],
+       [ 3.,  ...0.,  5.,  5.],
+       [ 0.,  1.,  0.,  2.,  2.]])<br>
+<strong>sigma</strong> = array([[ 12.48118584,   0.        ],
+       [  0.        ,   9.50841732]])<br>
+<strong>start_time</strong> = 1479651410.538994<br>
+<strong>temp_error</strong> = 1.3455597380105944<br>
+<strong>temp_matrix</strong> = array([[ -9.94054677e-01,  -1.01171854e+00,  -9....01,
+         -2.04009225e+00,  -2.04009225e+00]])</td></tr></table>
+</body></html>
