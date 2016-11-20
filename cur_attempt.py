@@ -21,11 +21,13 @@ from single_iter_svd import svd
 
 def handle_input(filename):
 
-	'''
+	"""
 	TAKING INPUT AND FORMING A MATRIX OUT OF IT
 	Input : A text file containing lines of the format "USER_ID ITEM_ID RATING"
 	Output : A matrix which stores this data 
-	'''
+	ratings : A matrix with columns as the movies and the rows as users.
+	ratings[i][j] represents the rating of ith user for the movie j
+	"""
 
 	input_file = open(filename,"r")
 	rating_raw = input_file.readlines()
@@ -64,9 +66,10 @@ ratings = handle_input("ratings.txt")
 
 def calc_error(ratings_svd):
 	
-	'''
+	"""
 	Caluclating the Frobenius Error
-	'''
+	ratings_svd : is the matrix for which we have to calculate the frobenius norm and it will be calculated by considering ratings as the base
+	"""
 	
 	error = 0
 
@@ -80,6 +83,9 @@ def calc_error(ratings_svd):
 ############################################################################################################
 
 def calc_length(matrix):
+	"""
+	The Square sum of the values of the matrix
+	"""
 	total = 0
 	for i in xrange(len(matrix)):
 		for j in xrange(len(matrix[i])):
@@ -90,6 +96,14 @@ def calc_length(matrix):
 ############################################################################################################
 
 def selection(matrix):
+
+	"""
+	Input : The matrix of which we have to select random rows
+	Output : Randomly selected rows based on the calculated probability distribution. These rows are scaled so as to compensate the fact that they sometimes are selected multiple times. It also returns the indexes of the selected rows
+	No of rows selected = rank of the matrix
+	Seed for random number generator : 777
+
+	"""
 
 	matrix = matrix.tolist()	
 	rows_selected = []

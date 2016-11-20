@@ -20,11 +20,13 @@ from numpy import linalg as LA
 
 def handle_input(filename):
 
-	'''
+	"""
 	TAKING INPUT AND FORMING A MATRIX OUT OF IT
 	Input : A text file containing lines of the format "USER_ID ITEM_ID RATING"
 	Output : A matrix which stores this data 
-	'''
+	ratings : A matrix with columns as the movies and the rows as users.
+	ratings[i][j] represents the rating of ith user for the movie j
+	"""
 
 	input_file = open(filename,"r")
 	rating_raw = input_file.readlines()
@@ -63,9 +65,10 @@ ratings = handle_input("test.txt")
 
 def calc_error(ratings_svd):
 	
-	'''
+	"""
 	Caluclating the Frobenius Error
-	'''
+	ratings_svd : is the matrix for which we have to calculate the frobenius norm and it will be calculated by considering ratings as the base
+	"""
 	
 	error = 0
 
@@ -79,11 +82,12 @@ def calc_error(ratings_svd):
 ############################################################################################################
 def eigen_pairs(matrix):
 	
-	'''
+	"""
 	FINDING THE SIGNIFICANT EIGEN_VALUES AND EIGEN_VECTORS
 	Input : A Matrix
-	Output : A dicitonary with keys as eigen values and value as the corressponding eigen vector
-	'''
+	Output : A dicitonary (eigen_pairs) with keys as eigen values and value as the corressponding eigen vector
+
+	"""
 
 	eigen_values,eigen_vectors = LA.eig(matrix)
 	eigen_pairs = {}
@@ -102,21 +106,27 @@ def eigen_pairs(matrix):
 
 def print_matrix(matrix):
 
-	'''
+	"""
 	UTITLITY FUNCTION TO PRINT A MATRIX
 	Input : A matrix
 	Output: prints the matrix onto the console 
-	'''
+	"""
+
 	for i in xrange(len(matrix)):
 		for j in xrange(len(matrix[i])):
 			print matrix[i][j],
 		print "\n"
 
 ############################################################################################################
-'''
-CALCULATING THE SINGULAR VALUE DECOMPOSTION BY COMPUTING THE EIGENVALUES AND EIGENVECTORS
-'''
 def svd(ratings):
+	
+	"""
+	CALCULATING THE SINGULAR VALUE DECOMPOSTION BY COMPUTING THE EIGENVALUES AND EIGENVECTORS
+	for_U : eigen_pairs for the matrix U
+	for_V : eigen_pairs for the matrix V
+	eigen_values : The list of eigen values. 
+	Note : All non-zero eigen values returned from a (matrix*matrix') and (matrix'*matrix) are same
+	"""
 	for_U = eigen_pairs(np.dot(ratings,ratings.T))
 	for_V = eigen_pairs(np.dot(ratings.T,ratings))
 
