@@ -21,8 +21,10 @@ from svd import svd
 from common import handle_input, calc_error
 
 
-
 def calc_length(matrix):
+	"""
+	The Square sum of the values of the matrix
+	"""
 	total = 0
 	for i in xrange(len(matrix)):
 		for j in xrange(len(matrix[i])):
@@ -31,6 +33,14 @@ def calc_length(matrix):
 	return total
 
 def selection(matrix):
+
+	"""
+	Input : The matrix of which we have to select random rows
+	Output : Randomly selected rows based on the calculated probability distribution. These rows are scaled so as to compensate the fact that they sometimes are selected multiple times. It also returns the indexes of the selected rows
+	No of rows selected = rank of the matrix
+	Seed for random number generator : 777
+
+	"""
 
 	matrix = matrix.tolist()	
 	rows_selected = []
@@ -56,6 +66,7 @@ def selection(matrix):
 	return compact_matrix,rows_selected
 
 ratings = handle_input("ratings.txt")
+start_time = time.time()
 
 R,rows_selected = selection(ratings)
 C,columns_selected = selection(ratings.T)
@@ -80,5 +91,12 @@ C = C.T
 R = np.matrix(R)
 
 final_matrix = np.dot(C,np.dot(intersection,R))
+
 print final_matrix
-print calc_error(ratings, final_matrix.tolist())
+
+final_error =  calc_error(ratings, final_matrix.tolist())
+
+print "\nFrobenius Error Of the CUR Decomposition is : ",final_error
+
+print " \n************* Execution Time : ************* "
+print "--- %s seconds ---" %(time.time() - start_time)

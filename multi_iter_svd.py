@@ -20,9 +20,9 @@ from numpy import linalg as LA
 from common import handle_input, calc_error
 from svd import eigen_pairs
 
-'''
+"""
 Calculating the matrices U,V and Sigma based on the eigen values returned by the numpy.linalg.eig function
-'''
+"""
 ratings = handle_input("ratings.txt")
 
 
@@ -73,9 +73,9 @@ for i in range(len(sigma)):
 
 ###############################################################################################################
 
-'''
+"""
 Here we are trying to find the minimum possible frobenius error by iterating through all the possible values of eigen vectors
-'''
+"""
 
 
 final_U = np.zeros((len(eigen_values),len(for_U[eigen_values[0]])))
