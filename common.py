@@ -19,11 +19,11 @@ from numpy import linalg as LA
 
 def handle_input(filename):
 
-	'''
+	"""
 	TAKING INPUT AND FORMING A MATRIX OUT OF IT
 	Input : A text file containing lines of the format "USER_ID ITEM_ID RATING"
 	Output : A matrix which stores this data 
-	'''
+	"""
 
 	input_file = open(filename,"r")
 	rating_raw = input_file.readlines()
@@ -58,9 +58,9 @@ def handle_input(filename):
 
 def calc_error(ratings_org, ratings_svd):
 	
-	'''
+	"""
 	Caluclating the Frobenius Error
-	'''
+	"""
 	
 	error = 0
 
@@ -73,13 +73,12 @@ def calc_error(ratings_org, ratings_svd):
 
 def print_matrix(matrix):
 
-	'''
+	"""
 	UTITLITY FUNCTION TO PRINT A MATRIX
 	Input : A matrix
 	Output: prints the matrix onto the console 
-	'''
+	"""
 	for i in xrange(len(matrix)):
 		for j in xrange(len(matrix[i])):
 			print matrix[i][j],
 		print "\n"
-
