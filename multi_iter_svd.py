@@ -23,7 +23,7 @@ from svd import eigen_pairs
 """
 Calculating the matrices U,V and Sigma based on the eigen values returned by the numpy.linalg.eig function
 """
-ratings = handle_input("ratings.txt")
+ratings = handle_input("test.txt")
 
 
 start_time = time.time()

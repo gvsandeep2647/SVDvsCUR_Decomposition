@@ -21,11 +21,11 @@ from common import handle_input, calc_error, print_matrix
 
 def eigen_pairs(matrix):
 	
-	'''
+	"""
 	FINDING THE SIGNIFICANT EIGEN_VALUES AND EIGEN_VECTORS
 	Input : A Matrix
 	Output : A dicitonary with keys as eigen values and value as the corressponding eigen vector
-	'''
+	"""
 
 	eigen_values,eigen_vectors = LA.eig(matrix)
 	eigen_pairs = {}
@@ -42,6 +42,13 @@ def eigen_pairs(matrix):
 
 
 def svd(ratings):
+
+	"""
+	A function to return the three matrices of the SVD Decomposition
+	Input : A matrix
+	Output : Three decomposed matrices which when multiplied would approxiamte the original matrix with lowest reconstruction error
+	The matrices U and V are column orthonormal. Sigma is a diagonal matrix whose diagonal elements are the square roots of the eigen values listed in descending order.
+	"""
 	for_U = eigen_pairs(np.dot(ratings,ratings.T))
 	for_V = eigen_pairs(np.dot(ratings.T,ratings))
 
@@ -67,5 +74,3 @@ def svd(ratings):
 		sigma[i][i] = eigen_values[i]**0.5
 
 	return U,sigma,V
-
-
