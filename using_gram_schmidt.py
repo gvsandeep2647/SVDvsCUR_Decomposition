@@ -56,7 +56,7 @@ def handle_input(filename):
 
 	return ratings
 
-ratings = handle_input("test1.txt")
+ratings = handle_input("test.txt")
 
 ############################################################################################################
 
@@ -89,6 +89,7 @@ for i in range(0,len(sigma)):
 ratings_svd = np.dot(U, np.dot(final_sigma, V))
 
 print "Error Calculated Using Inbuilt SVD Package :",calc_error(ratings_svd) #IDEAL ERROR
+print
 
 ############################################################################################################
 def eigen_pairs(matrix):
@@ -99,8 +100,7 @@ def eigen_pairs(matrix):
 	Output : A dicitonary with keys as eigen values and value as the corressponding eigen vector
 	'''
 
-	for_U = matrix
-	eigen_values,eigen_vectors = LA.eig(for_U)
+	eigen_values,eigen_vectors = LA.eig(matrix)
 	eigen_pairs = {}
 	for i in range(0,len(eigen_values)):
 		eigen_pairs[eigen_values[i]] = eigen_vectors[:,i]
@@ -115,65 +115,54 @@ def eigen_pairs(matrix):
 
 ############################################################################################################
 
-def basicQR(A):
-	u = np.zeros((len(A),len(A[0])))
-	for i in xrange(len(A)):
-		u[i][i] = 1
-	for k in xrange(250):
-		print k
-		q,r = LA.qr(A)
-		A = np.dot(r,q)
-		u = np.dot(u,q)
-	ev = []
-	ep = {}
-	for i in xrange(len(A)):
-		ev.append(round(A[i][i],2)**0.5)
-		ep[ev[i]] = u[:,i]
-	return ep
+def orthonormalize(arr):
+    arr = arr.T
+    n,m = arr.shape
+    ret = np.zeros((n,m))
+    ret[0] = arr[0]
+    ret[0] = ret[0]/LA.norm(ret[0])
+    for i in xrange(1,n):
+        ret[i] = arr[i]
+        for j in xrange(i):
+            x1 = np.dot(ret[j],ret[j])
+            x2 = np.dot(arr[i],ret[j])
+            rat = x2/x1
+            ret[i] = ret[i]-(rat*ret[j])
+        ret[i] = ret[i]/np.linalg.norm(ret[i])
+    ret = ret.T
+    return ret
 
-############################################################################################################
+#############################################################################################################
 
-for_U = basicQR(np.dot(ratings,ratings.T))
-for_V = basicQR(np.dot(ratings.T,ratings))
+for_U = eigen_pairs(np.dot(ratings,ratings.T))
+for_V = eigen_pairs(np.dot(ratings.T,ratings))
 
 
 eigen_values = []
-eigen_values_V = []
 for j in for_U:
 	if abs(j) !=0 :
 		eigen_values.append(round(j,2))
-
-for j in for_V:
-	if j!=0:
-		eigen_values_V.append(round(j,2))
-
-
 eigen_values = sorted(eigen_values)[::-1]
-eigen_values_V = sorted(eigen_values_V)[::-1]
-print len(eigen_values_V)==len(eigen_values_V)
-print set(sorted(eigen_values)) - set(sorted(eigen_values_V))
-print set(sorted(eigen_values_V)) - set(sorted(eigen_values))
+U = []
+for i in range(0,len(eigen_values)):
+	U.append(for_U[eigen_values[i]])
 
-sigma  = np.zeros((len(eigen_values),len(eigen_values)))
-U = np.zeros((len(for_U[eigen_values[0]]),len(eigen_values)))
-V = np.zeros((len(for_V[eigen_values[0]]),len(eigen_values)))
+U = np.matrix(U)
+print U
+U = orthonormalize(U)
+print U
 
-for j in xrange(len(eigen_values)):
-	if(eigen_values[j] != eigen_values_V[j]):
-		if eigen_values[j] > eigen_values_V[j]:
-			sigma[j][j] = eigen_values[j]**0.5
-		else :
-			sigma[j][j] = eigen_values_V[j]**0.5
-	else:
-		sigma[j][j] = eigen_values[j]**0.5
-	for i in xrange(len(for_U[eigen_values[0]])):
-		U[i][j] = for_U[eigen_values[j]][i]
-	for i in xrange(len(for_V[eigen_values_V[0]])):
-		V[i][j] = for_V[eigen_values_V[j]][i]
-	
+V = []
+for i in range(0,len(eigen_values)):
+	V.append(for_U[eigen_values[i]])
 
-V=V.T
-final_matrix =  np.dot(U,np.dot(sigma,V))
-final_matrix = final_matrix.tolist()
+V = np.matrix(V)
+V = orthonormalize(V.T)
 
+sigma = np.zeros((len(eigen_values),len(eigen_values)))
+for i in xrange(len(eigen_values)):
+	sigma[i][i] = eigen_values[i]**0.5
+
+final_matrix = np.dot(U,np.dot(sigma,V))
+print final_matrix
 print calc_error(final_matrix)
