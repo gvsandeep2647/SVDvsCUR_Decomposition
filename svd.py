@@ -73,4 +73,16 @@ def svd(ratings):
 	for i in xrange(len(eigen_values)):
 		sigma[i][i] = eigen_values[i]**0.5
 
+	for i in xrange(len(sigma)):
+		temp = np.dot(ratings,np.matrix(V[i]).T)
+		temp_U = np.matrix(U[:,i]).T
+		flag = False
+		for j in xrange(len(temp)):
+			if temp[j]/temp_U[j] < 0 :
+				flag = True
+				break
+		if flag:
+			for k in xrange(len(U[:,i])):
+				U[:,i][k] = -1 * U[:,i][k]
+
 	return U,sigma,V
