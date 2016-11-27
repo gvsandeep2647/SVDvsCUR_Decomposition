@@ -38,7 +38,7 @@ def selection(matrix):
 	Input : The matrix of which we have to select random rows
 	Output : Randomly selected rows based on the calculated probability distribution. These rows are scaled so as to compensate the fact that they sometimes are selected multiple times. It also returns the indexes of the selected rows
 	No of rows selected = rank of the matrix
-	Seed for random number generator : 777
+	Seed for random number generator : 117
 
 	"""
 
@@ -47,7 +47,7 @@ def selection(matrix):
 	prob = [0]*len(matrix)
 	total = calc_length(matrix)
 	compact_matrix = []
-	np.random.seed(777)
+	np.random.seed(117)
 	
 	for i in xrange(len(matrix)):
 		row = 0.0

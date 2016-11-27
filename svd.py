@@ -78,11 +78,12 @@ def svd(ratings):
 		temp_U = np.matrix(U[:,i]).T
 		flag = False
 		for j in xrange(len(temp)):
-			if temp[j]/temp_U[j] < 0 :
-				flag = True
-				break
+			if temp_U[j] != 0.0:
+				if temp[j]/temp_U[j] < 0.0 :
+					flag = True
+					break
 		if flag:
 			for k in xrange(len(U[:,i])):
-				U[:,i][k] = -1 * U[:,i][k]
+				U[k][i] = -1 * U[k][i]
 
 	return U,sigma,V
